@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .qr-output {
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 25px;
+        }
+        .qr-output img {
+            max-width: 250px;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+        }
+        .download-form {
+            display: inline-block; /* เพื่อให้อยู่ในบรรทัดเดียวกับปุ่มอื่นๆ หรือจัดกึ่งกลางได้ง่ายขึ้น */
+            margin-left: 10px; /* ระยะห่างจากปุ่ม Generate */
+        }
+        .download-form button {
+            background-color: #28a745;
+        }
+        .download-form button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Generator</h1>
+
+        <form method="POST" action="/">
+            <input type="text" name="data_to_encode" placeholder="Enter text or URL here" required value="{{ request.form.get('data_to_encode', '') }}">
+            <button type="submit">Generate QR Code</button>
+        </form>
+
+        {% if qr_image_data %}
+            <div class="qr-output">
+                <h2>Your QR Code:</h2>
+                <img src="data:image/png;base64,{{ qr_image_data }}" alt="Generated QR Code">
+                
+                <form method="POST" action="/download_qr" class="download-form">
+                    <input type="hidden" name="data_to_encode_download" value="{{ request.form.get('data_to_encode', '') }}">
+                    <button type="submit">Download QR Code</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
